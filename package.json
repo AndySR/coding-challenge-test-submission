@@ -13,6 +13,7 @@
     "test:ci": "jest --ci"
   },
   "dependencies": {
+    "@next/font": "^13.1.6",
     "@reduxjs/toolkit": "^2.0.1",
     "address-book": "^1.2.2",
     "classnames": "^2.5.1",

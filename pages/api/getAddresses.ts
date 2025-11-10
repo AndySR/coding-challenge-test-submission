@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-import generateMockAddresses from "../../src/utils/generateMockAddresses";
+import generateMockAddresses from '../../src/utils/generateMockAddresses';
 
 export default async function handle(
   req: NextApiRequest,
@@ -12,17 +12,17 @@ export default async function handle(
 
   if (!postcode || !streetnumber) {
     return res.status(400).send({
-      status: "error",
+      status: 'error',
       // DO NOT MODIFY MSG - used for grading
-      errormessage: "Postcode and street number fields mandatory!",
+      errormessage: 'Postcode and street number fields mandatory!',
     });
   }
 
   if (postcode.length < 4) {
     return res.status(400).send({
-      status: "error",
+      status: 'error',
       // DO NOT MODIFY MSG - used for grading
-      errormessage: "Postcode must be at least 4 digits!",
+      errormessage: 'Postcode must be at least 4 digits!',
     });
   }
 
@@ -30,21 +30,19 @@ export default async function handle(
    *  is all digits and non negative
    */
   const isStrictlyNumeric = (value: string) => {
-    return true;
+    return /^\d+$/.test(value);
   };
 
   /** TODO: Refactor the code below so there is no duplication of logic for postCode/streetNumber digit checks. */
-  if (!isStrictlyNumeric(postcode as string)) {
-    return res.status(400).send({
-      status: "error",
-      errormessage: "Postcode must be all digits and non negative!",
-    });
-  }
+  const invalidField = [
+    { value: postcode as string, name: 'Postcode' },
+    { value: streetnumber as string, name: 'Street Number' },
+  ].find((field) => !isStrictlyNumeric(field.value));
 
-  if (!isStrictlyNumeric(streetnumber as string)) {
+  if (invalidField) {
     return res.status(400).send({
-      status: "error",
-      errormessage: "Street Number must be all digits and non negative!",
+      status: 'error',
+      errormessage: `${invalidField.name} must be all digits and non negative!`,
     });
   }
 
@@ -60,14 +58,14 @@ export default async function handle(
     // delay the response by 500ms - for loading status check
     await timeout(500);
     return res.status(200).json({
-      status: "ok",
+      status: 'ok',
       details: mockAddresses,
     });
   }
 
   return res.status(404).json({
-    status: "error",
+    status: 'error',
     // DO NOT MODIFY MSG - used for grading
-    errormessage: "No results found!",
+    errormessage: 'No results found!',
   });
 }
